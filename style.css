@@ -1,0 +1,54 @@
+:root {
+    font-size: 16px;
+}
+
+* {
+    font-family: monospace;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.name-holder {
+    display: flex;
+    flex-direction: column;
+}
+
+.name-holder:last-child {
+    align-items: end;
+}
+
+.turn-ind {
+    font-size: 1.5rem;
+}
+
+#cell-holder {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    width: 100%;
+}
+
+.cell {
+    aspect-ratio: 1;
+    width: auto;
+    background-color: gainsboro;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 4rem;
+    border-radius: .5rem;
+}
