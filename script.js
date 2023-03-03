@@ -14,8 +14,8 @@ const gameBoard = (() => {
     };
 
     const clearBoard = () => {
-        for(let cell of board) {
-            cell = ""
+        for(let point of board) {
+            point = ""
         }
     }
 
@@ -48,30 +48,51 @@ const gameBoard = (() => {
 const Player = (symbol, name) => {
     const mark = () => symbol;
     const getName = () => name;
+    const setName = (newName) => {name = newName};
     return {
         mark,
-        getName
+        getName,
+        setName
     }
 }
 
 
 const game = (() => {
-    const player1 = Player('X', 'Tom');
-    const player2 = Player('O', "Computer")
+    const player1 = Player('X', 'Player 1');
+    const player2 = Player('O', 'Player 2');
+
     const player1Text = document.getElementById('player1')
     const player2Text = document.getElementById('player2')
     const player1Ind = document.getElementById('ply1ind')
     const player2Ind = document.getElementById('ply2ind')
+    const cells = document.getElementsByClassName('cell')
+    
 
     player1Ind.textContent = "✅"
     player2Ind.textContent = "❎"
 
     player1Text.textContent = player1.getName()
     player2Text.textContent = player2.getName()
-    this.winner;
-    this.currentPlayer = player1
+    let winner;
+    let currentPlayer = player1
 
-    const cells = document.getElementsByClassName('cell')
+    for(let cell of cells) [
+        cell.addEventListener('click', () => {
+            if(cell.textContent === "") {
+                cell.textContent = currentPlayer.mark()
+                gameBoard.updateBoard(currentPlayer.mark(), cell.dataset.cell)
+                changePlayer()
+            }
+            
+        })
+    ]
+    const clearCells = () => {
+        for(let cell of cells) {
+            cell.textContent = ""
+        }
+    }
+
+    
 
     const changePlayer = () => {
         if(currentPlayer === player1){
@@ -85,28 +106,48 @@ const game = (() => {
         }
     }
 
-    for(let cell of cells) [
-        cell.addEventListener('click', () => {
-            if(cell.textContent === "") {
-                cell.textContent = currentPlayer.mark()
-                gameBoard.updateBoard(currentPlayer.mark(), cell.dataset.cell)
-                changePlayer()
-            }
-            
-        })
-    ]
+    
+
+    const changePlayer1Name = (name) => {
+        player1.setName(name)
+        player1Text.textContent = player1.getName()
+    }
+
+    const changePlayer2Name = (name) => {
+        player2.setName(name)
+        player2Text.textContent = player2.getName()
+    }
+
+    const startGame = () => {
+
+        gameBoard.clearBoard()
+        clearCells()
+        overlay.startScreen()
+        
+
+        
+
+        
+
+        
+
+    }
 
     const endGame = (tie = "none") => {
         if(tie === "tie") {
-            console.log('tie')
+            overlay.endScreen('tie')
             return
         }
 
-        console.log(currentPlayer.getName())
+        winner = currentPlayer
+        overlay.endScreen(winner.name)
     }
     
     return {
-        endGame
+        endGame,
+        changePlayer1Name,
+        changePlayer2Name,
+        startGame
     }
     
 
@@ -115,26 +156,55 @@ const game = (() => {
 
 
 const overlay = (() => {
-    const overlay = document.getElementById('overlay')
 
     const startScreen = () => {
-        const title = document.createElement('h1')
-        title.textContent = "Start Game"
-        overlay.appendChild(title)
+        const startScreenOverlay = document.getElementById('start-game')
+        const player1Name = document.getElementById('player1-name')
+        const player2Name = document.getElementById('player2-name')
+        const newGame = document.getElementById('new-game')
 
-        const container = document.createElement('div')
-        container.classList.add('container')
-        const player1Name = document.createElement('div')
-        player1Name.classList.add('name-container')
-        const 
+        newGame.addEventListener('click', (e) => {
+            e.preventDefault()
 
+            if(player1Name.value !== "") {
+                game.changePlayer1Name(player1Name.value)
+            }
+
+            if(player2Name.value !== "") {
+                game.changePlayer2Name(player2Name.value)
+            }
+
+            startScreenOverlay.style.display = "none"
+        })
+        startScreenOverlay.style.display = 'flex'
+
+
+
+    }
+
+    const endScreen = (winner) => {
+        const gameOverOverlay = document.getElementById('game-over')
+        gameOverOverlay.style.display = 'flex'
+        const result = document.getElementById('result')
+        const restartBtn = document.getElementById('restart')
+
+        restartBtn.addEventListener('click', () => {
+            gameOverOverlay.style.display = 'none'
+            game.startGame()
+        })
+        if(winner === "tie") {
+            result.textContent = 'Tie'
+        }
+
+        result.textContent = winner
 
     }
 
     return {
-        startScreen
+        startScreen,
+        endScreen
     }
 })()
 
 
-overlay.startScreen()
+game.startGame()

@@ -1,5 +1,6 @@
 :root {
     font-size: 16px;
+    box-sizing: border-box;
 }
 
 * {
@@ -20,6 +21,30 @@ body {
     width: 100%;
     display: flex;
     justify-content: space-between;
+}
+
+#overlay {
+
+    display: flex;
+    justify-content: center;
+}
+
+#start-game, #game-over {
+    width: 80%;
+    display: none;
+    position: absolute;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+#start-game > * {
+    margin: 1.5rem 0;
+}
+
+#start-game > input {
+    width: auto;
 }
 
 .name-holder {
@@ -52,3 +77,4 @@ body {
     font-size: 4rem;
     border-radius: .5rem;
 }
+
